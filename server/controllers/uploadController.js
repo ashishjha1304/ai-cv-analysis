@@ -1,32 +1,30 @@
-const OpenAI = require("openai");
+const Groq = require("groq-sdk");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 exports.uploadResume = async (req, res) => {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
   try {
-    // ✅ check file
+    // ✅ Check file
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
     const filePath = req.file.path;
 
-    // ✅ read PDF
+    // ✅ Read PDF
     const dataBuffer = fs.readFileSync(filePath);
     let pdfData;
 
-try {
-  pdfData = await pdfParse(dataBuffer);
-} catch (err) {
-  console.log("PDF PARSE ERROR:", err.message);
-  return res.status(400).json({
-    error: "Unable to read this PDF. Please upload a proper resume file.",
-  });
-}
+    try {
+      pdfData = await pdfParse(dataBuffer);
+    } catch (err) {
+      console.log("PDF PARSE ERROR:", err.message);
+      return res.status(400).json({
+        error: "Unable to read this PDF. Please upload a proper resume file.",
+      });
+    }
+
     const resumeText = pdfData.text;
 
     if (!resumeText || resumeText.length < 20) {
@@ -35,46 +33,43 @@ try {
 
     console.log("EXTRACTED TEXT:", resumeText.substring(0, 200));
 
-    // 🔥 AI CALL
-    const aiResponse = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+    // 🔥 GROQ AI CALL
+    const aiResponse = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
           content:
-            "You are an expert ATS resume analyzer. Always return ONLY valid JSON. No explanation.",
+            "You are an expert ATS resume analyzer. Always return ONLY valid JSON. No explanation, no markdown, no code blocks.",
         },
         {
           role: "user",
-          content: `
-Analyze the following resume and return ONLY JSON.
+          content: `Analyze the following resume and return ONLY valid JSON.
 
-Format:
+Return exactly this format (no other text):
 {
-  "ats_score": number,
-  "skills_detected": string[],
-  "recommended_skills": string[],
-  "improvement_suggestions": string[],
+  "ats_score": <number 0-100>,
+  "skills_detected": ["skill1", "skill2"],
+  "recommended_skills": ["skill1", "skill2"],
+  "improvement_suggestions": ["suggestion1", "suggestion2"],
   "job_matches": [
-    {
-      "title": string,
-      "company": string,
-      "match_score": number
-    }
+    { "title": "Job Title", "company": "Industry/Company Type", "match_score": <number 0-100> }
   ]
 }
 
 Resume:
-${resumeText}
-          `,
+${resumeText}`,
         },
       ],
+      temperature: 0.3,
+      max_tokens: 1500,
     });
 
-    // ✅ SAFE PARSING (IMPORTANT FIX)
     let raw = aiResponse.choices[0].message.content;
+    console.log("RAW GROQ RESPONSE:", raw);
 
-    console.log("RAW AI RESPONSE:", raw);
+    // ✅ Strip any markdown code fences if present
+    raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
 
     const jsonMatch = raw.match(/{[\s\S]*}/);
 
@@ -83,13 +78,12 @@ ${resumeText}
     }
 
     const result = JSON.parse(jsonMatch[0]);
-
     console.log("FINAL RESULT:", result);
 
     res.json(result);
 
   } catch (err) {
-    console.log("ERROR:", err);
-    res.status(500).json({ error: "AI processing failed" });
+    console.log("ERROR:", err.message || err);
+    res.status(500).json({ error: "AI processing failed: " + (err.message || "Unknown error") });
   }
 };
