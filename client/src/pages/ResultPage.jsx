@@ -1,136 +1,220 @@
-import { useLocation } from "react-router-dom";
-import { FaArrowLeft, FaBriefcase, FaChartLine, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaBriefcase, FaChartLine, FaCheckCircle, FaExclamationTriangle, FaRedo } from 'react-icons/fa';
+
+function ScoreRing({ score }) {
+  const color = score >= 80 ? '#22c55e' : score >= 50 ? '#f59e0b' : '#ef4444';
+  const label = score >= 80 ? 'Excellent' : score >= 50 ? 'Good' : 'Needs Work';
+  const circumference = 2 * Math.PI * 54;
+  const offset = circumference - (score / 100) * circumference;
+
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="54" fill="none" stroke="currentColor"
+          className="dark:text-white/10 text-slate-200" strokeWidth="10" />
+        <circle cx="70" cy="70" r="54" fill="none" stroke={color} strokeWidth="10"
+          strokeDasharray={`${circumference}`}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          transform="rotate(-90 70 70)"
+          style={{ transition: 'stroke-dashoffset 1.2s ease' }} />
+        <text x="70" y="64" textAnchor="middle" fontSize="28" fontWeight="800" fill={color}>{score}</text>
+        <text x="70" y="80" textAnchor="middle" fontSize="11" fill="#94a3b8">out of 100</text>
+      </svg>
+      <span className="text-sm font-semibold mt-1" style={{ color }}>{label}</span>
+    </div>
+  );
+}
 
 function ResultPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-
-  // ✅ Handle missing state OR error returned from server
   if (!state || state.error) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl text-red-500 mb-2">Analysis Failed</h1>
-        <p className="text-gray-600">{state?.error || "No data available. Please upload a resume first."}</p>
-        <button onClick={() => navigate("/job-seeker/upload")} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg">
-          Try Again
-        </button>
+    return (
+      <div className="min-h-screen dark:bg-[#080818] bg-slate-50 flex items-center justify-center p-6">
+        <div className="glass rounded-3xl p-10 text-center max-w-md">
+          <div className="text-5xl mb-4">😕</div>
+          <h1 className="text-2xl font-bold dark:text-white text-slate-900 mb-2">Analysis Failed</h1>
+          <p className="dark:text-slate-400 text-slate-600 mb-6">
+            {state?.error || "No data available. Please upload a resume first."}
+          </p>
+          <button onClick={() => navigate("/job-seeker/upload")}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold
+              bg-gradient-to-r from-violet-600 to-blue-600 text-white
+              hover:from-violet-500 hover:to-blue-500 transition-all">
+            <FaRedo className="w-4 h-4" /> Try Again
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
-console.log(state);
+    );
+  }
+
+  const atsColor = state.ats_score >= 80 ? 'text-emerald-500' : state.ats_score >= 50 ? 'text-amber-500' : 'text-red-500';
+  const atsBg   = state.ats_score >= 80 ? 'dark:bg-emerald-500/10 bg-emerald-50' : state.ats_score >= 50 ? 'dark:bg-amber-500/10 bg-amber-50' : 'dark:bg-red-500/10 bg-red-50';
+  const atsMsg  = state.ats_score >= 80 ? "🎉 Great job! Your resume is highly compatible with ATS systems."
+    : state.ats_score >= 50 ? "💪 Not bad! There's room to improve your ATS compatibility."
+    : "⚠️ Your resume may struggle with ATS. Consider optimizing it.";
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 p-6">
-      <div className="max-w-7xl mx-auto pt-6 pb-12">
-      <button 
-        variant="ghost"
-        onClick={() => navigate("/")}
-        className="mb-8">
-        <FaArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
-      </button>
-      <div className="mb-8">
-        <h1 className="text-4xl mb-2">Resume Analysis Result</h1>
-        <p className="text-muted-foreground">AI-powered insights to help you improve your resume</p>
+    <div className="min-h-screen dark:bg-[#080818] bg-slate-50 transition-colors duration-300 px-6 pt-28 pb-16">
+
+      {/* Ambient */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="orb orb-purple w-96 h-96 top-10 -left-32" />
+        <div className="orb orb-blue w-72 h-72 bottom-20 right-0" style={{ animationDelay: '3s' }} />
       </div>
-      <div className="bg-white/80 backdrop-blur-sm p-8 rounded-lg shadow-md">
-      <div className="flex items-start justify-between mb-6">
-        <div>
-        <h2 className="text-xl mb-2">ATS Compatibility Score</h2>
-        <p className="text-sm text-muted-foreground">How well your resume passes Applicant Tracking Systems</p>
-        </div>
-        <div className="text-right">
-          <div className="text-5xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {state.ats_score}%
+
+      <div className="relative max-w-4xl mx-auto">
+
+        {/* Header */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-2 h-8 rounded-full bg-gradient-to-b from-violet-600 to-blue-600" />
+            <h1 className="text-3xl sm:text-4xl font-extrabold dark:text-white text-slate-900">
+              Resume Analysis Result
+            </h1>
           </div>
-          <div className="text-sm text-muted-foreground">out of 100</div>
+          <p className="dark:text-slate-400 text-slate-500 ml-5">AI-powered insights to help you land your dream job</p>
         </div>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-3 mt-4">
-        <div
-          className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full"
-          style={{ width: `${state.ats_score}%` }}
-        />
-      </div>
-        <p className="mt-4 text-sm text-muted-foreground">
-          {state.ats_score >= 80
-            ? "Great job! Your resume is highly compatible with ATS."
-            : state.ats_score >= 50
-            ? "Not bad, but there's room for improvement to pass ATS."
-            : "Your resume may struggle to pass ATS. Consider optimizing it."}
-        </p>
-    </div>
-    <div className="grid md:grid-cols-2 gap-6 mb-6">
-      <div className="p-6 bg-white/80 backdrop-blur-sm">
-        <div className="flex items-center mb-4">
-          <FaCheckCircle className="w-5 h-5 text-green-600 mr-2" />
-          <h2 className="text-xl">Skills Detected</h2>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {state.skills_detected?.map((skill, index) => (
-            <div key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-              {skill}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="p-6 bg-white/80 backdrop-blur-sm">
-        <div className="flex items-center mb-4">
-          <FaExclamationTriangle className="w-5 h-5 text-orange-600 mr-2" />
-          <h2 className="text-xl">Recommended Skills to Add</h2>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {state.recommended_skills?.map((skill, index) => (
-            <div key={index} className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">
-              {skill}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-    <div className="p-6 mb-6 bg-white/80 backdrop-blur-sm">
-      <div className="flex items-center mb-4">
-        <FaChartLine className="w-5 h-5 text-blue-600 mr-2" />
-        <h2 className="text-xl">Improvement Suggestions</h2>
-      </div>
-      <ul className="space-y-3">
-        {state.improvement_suggestions?.map((suggestion, index) => (
-          <li key={index} className="flex items-start">
-            <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm mr-3 mt-0.5 flex-shrink-0">
-              {index + 1}
-            </div>
-            <span className="text-foreground">{suggestion}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-    <div className="p-6 bg-white/80 backdrop-blur-sm">
-      <div className="flex items-center mb-6">
-        <FaBriefcase className="w-5 h-5 text-purple-600 mr-2" />
-        <h2 className="text-xl">Top Job Matches</h2>
-      </div>
-      <div className="grid gap-4">
-        {state.job_matches?.map((job, index) => (
-          <div key={index} className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-purple-200 hover:bg-purple-50/50 transition-all cursor-pointer">
-            <div>
-            <h3 className="mb-1">{job.title}</h3>
-            <p className="text-sm text-muted-foreground">{job.company}</p>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                {job.match_score}%
+
+        {/* ATS Score Card */}
+        <div className={`glass rounded-3xl p-6 sm:p-8 mb-6 ${atsBg} dark:border-white/10 border border-white/60`}>
+          <div className="flex flex-col sm:flex-row items-center gap-8">
+            <ScoreRing score={state.ats_score} />
+            <div className="flex-1 text-center sm:text-left">
+              <h2 className="text-xl font-bold dark:text-white text-slate-900 mb-1">ATS Compatibility Score</h2>
+              <p className="dark:text-slate-400 text-slate-500 text-sm mb-4">
+                How well your resume passes Applicant Tracking Systems
+              </p>
+              {/* Progress bar */}
+              <div className="w-full h-2.5 dark:bg-white/10 bg-slate-200 rounded-full overflow-hidden mb-4">
+                <div className="h-full rounded-full bg-gradient-to-r from-violet-600 to-blue-500 transition-all duration-1000"
+                  style={{ width: `${state.ats_score}%` }} />
               </div>
-              <div className="text-xs text-muted-foreground">match</div>
+              <p className="text-sm dark:text-slate-300 text-slate-700 font-medium">{atsMsg}</p>
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Skills Grid */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+
+          {/* Skills Detected */}
+          <div className="glass rounded-3xl p-6 dark:border-white/10 border border-white/60">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center">
+                <FaCheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <h2 className="font-bold dark:text-white text-slate-900">Skills Detected</h2>
+              <span className="ml-auto text-xs px-2 py-0.5 rounded-full dark:bg-emerald-500/15 dark:text-emerald-400 bg-emerald-100 text-emerald-700 font-medium">
+                {state.skills_detected?.length || 0} found
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {state.skills_detected?.map((skill, i) => (
+                <span key={i} className="px-3 py-1.5 rounded-full text-sm font-medium
+                  dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/20
+                  bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Recommended Skills */}
+          <div className="glass rounded-3xl p-6 dark:border-white/10 border border-white/60">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center">
+                <FaExclamationTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              </div>
+              <h2 className="font-bold dark:text-white text-slate-900">Skills to Add</h2>
+              <span className="ml-auto text-xs px-2 py-0.5 rounded-full dark:bg-amber-500/15 dark:text-amber-400 bg-amber-100 text-amber-700 font-medium">
+                {state.recommended_skills?.length || 0} suggestions
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {state.recommended_skills?.map((skill, i) => (
+                <span key={i} className="px-3 py-1.5 rounded-full text-sm font-medium
+                  dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/20
+                  bg-amber-100 text-amber-800 border border-amber-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Improvement Suggestions */}
+        <div className="glass rounded-3xl p-6 sm:p-8 mb-6 dark:border-white/10 border border-white/60">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
+              <FaChartLine className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h2 className="font-bold dark:text-white text-slate-900">Improvement Suggestions</h2>
+          </div>
+          <div className="space-y-3">
+            {state.improvement_suggestions?.map((s, i) => (
+              <div key={i} className="flex items-start gap-3 p-3 rounded-2xl
+                dark:bg-white/5 dark:hover:bg-blue-500/5 bg-slate-50 hover:bg-blue-50
+                transition-colors duration-200">
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-violet-600 to-blue-600
+                  flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">
+                  {i + 1}
+                </div>
+                <span className="text-sm dark:text-slate-300 text-slate-700 leading-relaxed">{s}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Job Matches */}
+        <div className="glass rounded-3xl p-6 sm:p-8 dark:border-white/10 border border-white/60">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-8 h-8 rounded-xl bg-violet-100 dark:bg-violet-500/20 flex items-center justify-center">
+              <FaBriefcase className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            </div>
+            <h2 className="font-bold dark:text-white text-slate-900">Top Job Matches</h2>
+          </div>
+          <div className="space-y-3">
+            {state.job_matches?.map((job, i) => (
+              <div key={i} className="flex items-center justify-between p-4 rounded-2xl
+                dark:bg-white/5 dark:hover:bg-violet-500/10 dark:border-white/5
+                bg-slate-50 hover:bg-violet-50 border border-slate-100 hover:border-violet-200
+                transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-blue-600
+                    flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                    {i + 1}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold dark:text-white text-slate-900 text-sm">{job.title}</h3>
+                    <p className="text-xs dark:text-slate-400 text-slate-500">{job.company}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xl font-extrabold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
+                    {job.match_score}%
+                  </div>
+                  <div className="text-xs dark:text-slate-500 text-slate-400">match</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-8 text-center">
+          <button onClick={() => navigate("/job-seeker/upload")}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm
+              dark:bg-white/10 dark:hover:bg-white/15 dark:text-white dark:border-white/10
+              bg-white hover:bg-slate-50 text-slate-700 border border-slate-200
+              transition-all duration-200 shadow-sm">
+            <FaRedo className="w-3.5 h-3.5" /> Analyze Another Resume
+          </button>
+        </div>
+
       </div>
-    </div>
-    </div>
     </div>
   );
 }

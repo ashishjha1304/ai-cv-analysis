@@ -1,16 +1,17 @@
 const Groq = require("groq-sdk");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
+const Resume = require("../models/Resume");
 
 exports.uploadResume = async (req, res) => {
   const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  const filePath = req.file ? req.file.path : null;
+
   try {
     // ✅ Check file
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
-
-    const filePath = req.file.path;
 
     // ✅ Read PDF
     const dataBuffer = fs.readFileSync(filePath);
@@ -80,10 +81,32 @@ ${resumeText}`,
     const result = JSON.parse(jsonMatch[0]);
     console.log("FINAL RESULT:", result);
 
-    res.json(result);
+    // ✅ Save to MongoDB
+    try {
+      await Resume.create({
+        filename: req.file.originalname,
+        ats_score: result.ats_score,
+        skills_detected: result.skills_detected,
+        recommended_skills: result.recommended_skills,
+        improvement_suggestions: result.improvement_suggestions,
+        job_matches: result.job_matches,
+      });
+      console.log("✅ Saved to MongoDB");
+    } catch (dbErr) {
+      console.log("⚠️ MongoDB save failed (non-critical):", dbErr.message);
+    }
 
+    res.json(result);
   } catch (err) {
     console.log("ERROR:", err.message || err);
-    res.status(500).json({ error: "AI processing failed: " + (err.message || "Unknown error") });
+    res
+      .status(500)
+      .json({ error: "AI processing failed: " + (err.message || "Unknown error") });
+  } finally {
+    // ✅ Always clean up the uploaded temp file
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      console.log("🗑️ Temp file deleted:", filePath);
+    }
   }
 };

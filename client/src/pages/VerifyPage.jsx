@@ -1,40 +1,81 @@
-import { FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import CandidateCard from '../components/CandidateCard';
+import { useNavigate } from 'react-router-dom';
+import { FaGithub, FaShieldAlt, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
+
+const highlights = [
+  { icon: FaShieldAlt,         label: 'Trust Score',      desc: 'Overall credibility',       color: 'text-violet-500', bg: 'dark:bg-violet-500/10 bg-violet-50' },
+  { icon: FaGithub,            label: 'GitHub Activity',  desc: 'Contribution patterns',     color: 'text-blue-500',   bg: 'dark:bg-blue-500/10 bg-blue-50' },
+  { icon: FaExclamationTriangle, label: 'Red Flags',      desc: 'Potential concerns',        color: 'text-red-500',    bg: 'dark:bg-red-500/10 bg-red-50' },
+];
 
 function VerifyPage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 p-6">
-      <div className="max-w-3xl mx-auto pt-12">
-        <button
-          onClick={() => navigate("/")}
-          className="mb-8">
-          <FaArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </button>
-        <div className="text-center mb-8">
-          <h1 className="text-4xl mb-3">Candidate Verification</h1>
-          <p className="text-muted-foreground">Enter candidate details for AI-powered verification and trust scoring</p>
-        </div>
-        <CandidateCard />
-        <div className='mt-8 space-y-3'>
-        <p className='text-sm text-muted-foreground text-center'>What we'll analyze:</p>
-        <div className="grid md:grid-cols-3 gap-4 text-center">
-            <div className="text-sm">
-                <div className='text-foreground'>Trust Score</div>
-                <div className='text-muted-foreground text-xs'>Overall Credibility rating</div>
-            </div>
-            <div className="text-sm">
-                <div className='text-foreground'>GitHub Activity</div>
-                <div className='text-muted-foreground text-xs'>Contribution patterns</div>
-            </div>
-            <div className="text-sm">
-                <div className='text-foreground'>Red Flags</div>
-                <div className='text-muted-foreground text-xs'>Potential concerns</div>
-            </div>
-        </div>
+    <div className="min-h-screen dark:bg-[#080818] bg-slate-50 transition-colors duration-300 px-6 pt-28 pb-16">
+
+      {/* Ambient */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="orb orb-purple w-80 h-80 top-10 right-0" />
+        <div className="orb orb-cyan w-72 h-72 bottom-20 -left-20" style={{ animationDelay: '3s' }} />
       </div>
+
+      <div className="relative max-w-2xl mx-auto">
+
+        {/* Badge */}
+        <div className="flex justify-center mb-8">
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium
+            dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-300
+            bg-emerald-50 border border-emerald-200 text-emerald-700">
+            <FaShieldAlt className="w-3 h-3" />
+            Recruiter · Candidate Verification
+          </div>
+        </div>
+
+        {/* Heading */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl sm:text-5xl font-extrabold dark:text-white text-slate-900 mb-4 leading-tight">
+            Verify a
+            <span className="gradient-text"> Candidate</span>
+          </h1>
+          <p className="dark:text-slate-400 text-slate-600 text-lg">
+            AI-powered trust scoring with GitHub analysis, strengths, red flags, and final verdict.
+          </p>
+        </div>
+
+        {/* Candidate Card Form */}
+        <CandidateCard />
+
+        {/* What we analyze */}
+        <div className="mt-10">
+          <p className="text-center text-sm font-medium dark:text-slate-500 text-slate-400 mb-5 uppercase tracking-widest">
+            What we'll analyze
+          </p>
+          <div className="grid grid-cols-3 gap-4">
+            {highlights.map(({ icon: Icon, label, desc, color, bg }) => (
+              <div key={label} className={`glass rounded-2xl p-4 text-center ${bg} border border-transparent`}>
+                <div className={`${color} flex justify-center mb-2`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className={`text-sm font-semibold ${color}`}>{label}</div>
+                <div className="text-xs dark:text-slate-500 text-slate-500 mt-1">{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tips */}
+        <div className="mt-8 glass rounded-2xl p-5 dark:border-blue-500/20 border border-blue-100">
+          <div className="flex items-start gap-3">
+            <FaCheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-semibold dark:text-slate-300 text-slate-700 mb-1">Pro Tip</p>
+              <p className="text-sm dark:text-slate-400 text-slate-600">
+                For best results, provide the candidate's full name exactly as on their resume
+                and their complete GitHub profile URL (e.g., https://github.com/username).
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

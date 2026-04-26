@@ -1,36 +1,42 @@
-# 🤖 AI CV Analysis & Resume Intelligence Platform
+# 🚀 AI Career Intelligence Platform (2026)
 
-An advanced, AI-powered resume analysis tool that helps job seekers optimize their resumes for ATS (Applicant Tracking Systems) and provides recruiters with deep insights into candidate profiles. Built with the **MERN Stack** and powered by **Groq AI (Llama 3.3)** for lightning-fast analysis.
+A premium, state-of-the-art AI-powered platform designed to revolutionize the recruitment and job-seeking experience. Built with a stunning **Glassmorphism UI**, **Dark/Light Mode** support, and powered by the lightning-fast **Groq AI (Llama 3.3 70B)**.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![React](https://img.shields.io/badge/Frontend-React.js-blue)
-![Node](https://img.shields.io/badge/Backend-Node.js-green)
-![AI](https://img.shields.io/badge/AI-Groq%20Llama%203.3-orange)
+Developed with ❤️ by **[Ashish Jha](https://github.com/ashishjha1304)**.
 
 ---
 
-## 🌟 Key Features
+## ✨ Features
 
 ### 📄 For Job Seekers
-- **ATS Score Analysis**: Get a compatibility score out of 100.
-- **Skills Detection**: Automatically extracts technical and soft skills from your PDF.
-- **Improvement Suggestions**: AI-driven tips to make your resume stand out.
-- **Job Matching**: Recommends job roles based on your experience and skills.
+- **ATS Compatibility Score**: Real-time analysis of how your resume performs against Applicant Tracking Systems.
+- **AI Skill Gap Analysis**: Intelligent detection of missing skills required for your target roles.
+- **Improvement Suggestions**: Actionable, AI-driven feedback to optimize every section of your resume.
+- **Top Job Matches**: Personalized career recommendations based on your unique profile.
 
 ### 🔍 For Recruiters
-- **Candidate Verification**: Analyze candidate trust scores.
-- **GitHub Activity Analysis**: Evaluate technical contributions.
-- **Red Flag Detection**: Identify potential gaps or issues in profiles.
+- **Candidate Trust Scoring**: AI-powered credibility assessment to help you hire with confidence.
+- **GitHub Intelligence**: Deep analysis of candidate contributions, commit patterns, and code quality.
+- **Red Flag Detection**: Automatic identification of potential profile gaps or inconsistencies.
+- **AI Verdict**: A comprehensive, simplified final recommendation for each candidate.
+
+---
+
+## 🎨 Modern UI/UX
+- **Premium Glassmorphism**: Beautiful frosted-glass components for a sleek, modern look.
+- **Dynamic Dark/Light Mode**: Seamlessly switch between themes with a single click.
+- **Micro-Animations**: Smooth transitions, floating orbs, and interactive elements for a "WOW" experience.
+- **Responsive Design**: Fully optimized for desktops, tablets, and mobile devices.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React.js, Tailwind CSS, Lucide Icons
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB Atlas
-- **AI Engine**: Groq SDK (Llama 3.3 70B Model)
-- **PDF Parsing**: pdf-parse
+- **Frontend**: React.js, Tailwind CSS (Custom Theme), Lucide Icons, Framer-inspired animations.
+- **Backend**: Node.js, Express.js.
+- **Database**: MongoDB Atlas.
+- **AI Engine**: Groq SDK (Llama 3.3 70B Model).
+- **DNS Handling**: Custom Google DNS integration for high-reliability MongoDB connectivity.
 
 ---
 
@@ -38,30 +44,30 @@ An advanced, AI-powered resume analysis tool that helps job seekers optimize the
 
 ### Prerequisites
 - Node.js installed
-- A Groq API Key (Free from [console.groq.com](https://console.groq.com))
+- A Groq API Key (Get it free at [console.groq.com](https://console.groq.com))
 - MongoDB Atlas connection string
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/ashishjha1304/ai-cv-analysis.git
-   cd ai-cv-analysis
+   git clone https://github.com/ashishjha1304/ai-resume-analyzer.git
+   cd ai-resume-analyzer
    ```
 
-2. **Setup Backend**
+2. **Backend Configuration**
    ```bash
    cd server
    npm install
    ```
    Create a `.env` file in the `server` folder:
    ```env
-   MONGO_URI=your_mongodb_uri
+   MONGO_URI=your_mongodb_atlas_uri
    PORT=5000
    GROQ_API_KEY=your_groq_api_key
    ```
 
-3. **Setup Frontend**
+3. **Frontend Configuration**
    ```bash
    cd ../client
    npm install
@@ -70,19 +76,22 @@ An advanced, AI-powered resume analysis tool that helps job seekers optimize the
 
 ---
 
-## 📸 Screenshots
+## 📸 Project Showcase
 
-| Home Page | Analysis Result |
-| :---: | :---: |
-| ![Home](https://raw.githubusercontent.com/ashishjha1304/ai-cv-analysis/main/screenshots/home.png) | ![Result](https://raw.githubusercontent.com/ashishjha1304/ai-cv-analysis/main/screenshots/result.png) |
+### 🏠 Home Page (Dark/Light)
+![Home](https://raw.githubusercontent.com/ashishjha1304/ai-cv-analysis/main/screenshots/home_dark.png)
+
+### 📊 Analysis Results
+![Result](https://raw.githubusercontent.com/ashishjha1304/ai-cv-analysis/main/screenshots/result_dark.png)
 
 ---
 
 ## 👤 Author
 
 **Ashish Jha**
-- GitHub: [@ashishjha1304](https://github.com/ashishjha1304)
-- Email: [ashishjha1304@outlook.com](mailto:ashishjha1304@outlook.com)
+- **GitHub**: [@ashishjha1304](https://github.com/ashishjha1304)
+- **LinkedIn**: [Ashish Jha](https://linkedin.com/in/ashishjha1304)
+- **Year**: 2026
 
 ---
 

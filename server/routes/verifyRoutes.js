@@ -1,16 +1,7 @@
 const express = require("express");
-const router = express.Router(); // ✅ DEFINE ROUTER
+const router = express.Router();
+const { verifyCandidate } = require("../controllers/verifyController");
 
-router.post("/verify-candidate", async (req, res) => {
-  const { name, github } = req.body;
+router.post("/verify-candidate", verifyCandidate);
 
-  console.log("Received:", name, github);
-
-  res.json({
-    trustScore: 85,
-    activity: "Active contributor",
-    redFlags: ["No major issues"],
-  });
-});
-
-module.exports = router; // ✅ EXPORT ROUTER
+module.exports = router;
