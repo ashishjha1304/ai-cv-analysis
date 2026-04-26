@@ -76,16 +76,6 @@ Developed with ❤️ by **[Ashish Jha](https://github.com/ashishjha1304)**.
 
 ---
 
-## 📸 Project Showcase
-
-### 🏠 Home Page (Dark/Light)
-![Home](https://raw.githubusercontent.com/ashishjha1304/ai-cv-analysis/main/screenshots/home_dark.png)
-
-### 📊 Analysis Results
-![Result](https://raw.githubusercontent.com/ashishjha1304/ai-cv-analysis/main/screenshots/result_dark.png)
-
----
-
 ## 👤 Author
 
 **Ashish Jha**
