@@ -1,4 +1,4 @@
-# 🚀 AI Career Intelligence Platform (2026)
+# 🚀 AI Career Intelligence Platform
 
 A premium, state-of-the-art AI-powered platform designed to revolutionize the recruitment and job-seeking experience. Built with a stunning **Glassmorphism UI**, **Dark/Light Mode** support, and powered by the lightning-fast **Groq AI (Llama 3.3 70B)**.
 
