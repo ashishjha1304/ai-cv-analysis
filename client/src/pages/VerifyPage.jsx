@@ -1,5 +1,4 @@
 import CandidateCard from '../components/CandidateCard';
-import { useNavigate } from 'react-router-dom';
 import { FaGithub, FaShieldAlt, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
 
 const highlights = [
