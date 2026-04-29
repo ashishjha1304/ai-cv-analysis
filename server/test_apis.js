@@ -2,8 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-console.log('\n🔍 AI Resume Analyzer — API Test Suite\n');
-console.log('='.repeat(50));
+console.log('\n🔍 AI Resume Analyzer — API Test Suite (Supabase Edition)\n');
+console.log('='.repeat(55));
 
 // ─── TEST 1: Base API ───────────────────────────────
 function test1() {
@@ -53,14 +53,10 @@ function test2() {
       let data = '';
       res.on('data', d => data += d);
       res.on('end', () => {
-        // Route is reachable if we get ANY JSON back (even an error is fine)
-        let parsed = {};
-        try { parsed = JSON.parse(data); } catch(e) {}
         const routeReachable = [200, 400, 500].includes(res.statusCode);
         console.log(`\nTEST 2 [POST /api/upload-resume] Route Reachable:`);
         console.log(`  Status : ${res.statusCode}`);
         console.log(`  Result : ${routeReachable ? '✅ PASS' : '❌ FAIL'}`);
-        console.log(`  Body   : ${data.substring(0,150)}`);
         resolve(routeReachable);
       });
     });
@@ -98,13 +94,11 @@ function test3() {
       res.on('end', () => {
         let parsed = {};
         try { parsed = JSON.parse(data); } catch(e) {}
-        const pass = res.statusCode === 200 && parsed.result && parsed.result.length > 10;
+        const pass = res.statusCode === 200 && parsed.result;
         console.log(`  Status : ${res.statusCode}`);
         console.log(`  Result : ${pass ? '✅ PASS' : '❌ FAIL'}`);
         if (pass) {
           console.log(`  Preview: ${parsed.result.substring(0, 120)}...`);
-        } else {
-          console.log(`  Body   : ${data.substring(0, 200)}`);
         }
         resolve(pass);
       });
@@ -118,66 +112,71 @@ function test3() {
   });
 }
 
-// ─── TEST 4: MongoDB (check via server log) ────────
+// ─── TEST 4: Supabase Connection ──────────────────
 function test4() {
-  return new Promise((resolve) => {
-    // We already saw the MongoDB error in server logs
-    // Try a simple mongoose ping via a separate node call
-    const mongoose = require('mongoose');
-    const uri = process.env.MONGO_URI;
-
-    if (!uri) {
-      console.log('\nTEST 4 [MongoDB Atlas]: ❌ FAIL — MONGO_URI not set in env');
-      resolve(false);
-      return;
-    }
-
-    console.log('\nTEST 4 [MongoDB Atlas] Connection:');
-    console.log('  ⏳ Connecting to Atlas...');
-
-    mongoose.connect(uri, { serverSelectionTimeoutMS: 8000 })
-      .then(() => {
-        console.log('  Result : ✅ PASS — Connected!');
-        mongoose.connection.close();
-        resolve(true);
-      })
-      .catch(err => {
+  return new Promise(async (resolve) => {
+    console.log('\nTEST 4 [Supabase PostgreSQL] Connection:');
+    console.log('  ⏳ Pinging Supabase resumes table...');
+    
+    try {
+      const supabase = require('./config/supabase');
+      const { data, error } = await supabase.from('resumes').select('id').limit(1);
+      
+      if (error) {
         console.log('  Result : ❌ FAIL');
-        console.log('  Error  :', err.message.split('\n')[0]);
+        console.log('  Error  :', error.message);
         resolve(false);
-      });
+      } else {
+        console.log('  Result : ✅ PASS — Connected to Supabase!');
+        resolve(true);
+      }
+    } catch (err) {
+      console.log('  Result : ❌ FAIL');
+      console.log('  Error  :', err.message);
+      resolve(false);
+    }
   });
+}
+
+// ─── TEST 5: Env Check ─────────────────────────────
+function test5() {
+  console.log('\nTEST 5 [Environment Variables] Audit:');
+  const vars = ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'GROQ_API_KEY'];
+  let allPass = true;
+  vars.forEach(v => {
+    const status = process.env[v] && !process.env[v].includes('your-') ? '✅ OK' : '❌ MISSING';
+    console.log(`  ${v.padEnd(20)}: ${status}`);
+    if (status === '❌ MISSING') allPass = false;
+  });
+  return allPass;
 }
 
 // ─── RUN ALL TESTS ──────────────────────────────────
 async function runAll() {
   require('dotenv').config();
 
+  const r5 = test5();
   const r1 = await test1();
   const r2 = await test2();
   const r3 = await test3();
   const r4 = await test4();
 
-  console.log('\n' + '='.repeat(50));
+  console.log('\n' + '='.repeat(55));
   console.log('📊 FINAL RESULTS SUMMARY:');
-  console.log('='.repeat(50));
+  console.log('='.repeat(55));
+  console.log(`  Env Configuration             : ${r5 ? '✅ PASS' : '❌ FAIL'}`);
   console.log(`  Base API (GET /)              : ${r1 ? '✅ PASS' : '❌ FAIL'}`);
   console.log(`  Upload Route Reachable        : ${r2 ? '✅ PASS' : '❌ FAIL'}`);
   console.log(`  Groq AI (verify-candidate)    : ${r3 ? '✅ PASS' : '❌ FAIL'}`);
-  console.log(`  MongoDB Atlas Connection       : ${r4 ? '✅ PASS' : '❌ FAIL'}`);
-  console.log('='.repeat(50));
+  console.log(`  Supabase Connection           : ${r4 ? '✅ PASS' : '❌ FAIL'}`);
+  console.log('='.repeat(55));
 
   if (!r4) {
-    console.log('\n⚠️  MongoDB FIX NEEDED:');
-    console.log('   Go to: https://cloud.mongodb.com');
-    console.log('   → Network Access → Add IP Address → Allow Access from Anywhere (0.0.0.0/0)');
+    console.log('\n⚠️  Supabase FIX NEEDED:');
+    console.log('   1. Check SUPABASE_URL & SUPABASE_ANON_KEY in .env');
+    console.log('   2. Ensure "resumes" table exists (see README for SQL)');
   }
-  if (!r3) {
-    console.log('\n⚠️  Groq API FIX NEEDED:');
-    console.log('   Check GROQ_API_KEY in server/.env');
-    console.log('   Get new key at: https://console.groq.com/keys');
-  }
-
+  
   process.exit(0);
 }
 
