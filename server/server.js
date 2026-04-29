@@ -13,10 +13,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
+// MongoDB connection with robust options
+const mongoOptions = {
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+};
+
+mongoose.connect(process.env.MONGO_URI, mongoOptions)
   .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.log("MongoDB Error:", err.message));
+  .catch(err => {
+    console.log("❌ MongoDB Error:", err.message);
+    if (err.message.includes("ECONNREFUSED")) {
+      console.log("👉 Tip: This usually means your ISP is blocking MongoDB DNS. Try using a VPN or changing your DNS to 8.8.8.8");
+    }
+  });
 
 // Routes
 const uploadRoutes = require("./routes/uploadRoutes");
