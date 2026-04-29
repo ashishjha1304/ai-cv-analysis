@@ -1,18 +1,5 @@
 require("dotenv").config();
 
-// Force Google DNS to resolve MongoDB SRV records (fixes ISP DNS blocks)
-const dns = require("dns");
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
-
-// This ensures that the mongodb driver also uses this resolver
-const originalResolveSrv = dns.resolveSrv;
-dns.resolveSrv = function(name, callback) {
-  if (name.includes("mongodb.net")) {
-    console.log("🔍 Custom DNS resolving for:", name);
-  }
-  return originalResolveSrv.apply(this, arguments);
-};
-
 const express = require("express");
 const cors = require("cors");
 
