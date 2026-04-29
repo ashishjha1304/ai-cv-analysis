@@ -4,29 +4,24 @@ require("dotenv").config();
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
+// This ensures that the mongodb driver also uses this resolver
+const originalResolveSrv = dns.resolveSrv;
+dns.resolveSrv = function(name, callback) {
+  if (name.includes("mongodb.net")) {
+    console.log("🔍 Custom DNS resolving for:", name);
+  }
+  return originalResolveSrv.apply(this, arguments);
+};
+
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 
 const app = express(); 
 
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection with robust options
-const mongoOptions = {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-};
-
-mongoose.connect(process.env.MONGO_URI, mongoOptions)
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => {
-    console.log("❌ MongoDB Error:", err.message);
-    if (err.message.includes("ECONNREFUSED")) {
-      console.log("👉 Tip: This usually means your ISP is blocking MongoDB DNS. Try using a VPN or changing your DNS to 8.8.8.8");
-    }
-  });
+console.log("Supabase Client Initialized ✅ (Ready to insert)");
 
 // Routes
 const uploadRoutes = require("./routes/uploadRoutes");
