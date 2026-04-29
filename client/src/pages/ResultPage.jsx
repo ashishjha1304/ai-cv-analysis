@@ -50,11 +50,11 @@ function ResultPage() {
     );
   }
 
-
-  const atsBg   = state.ats_score >= 80 ? 'dark:bg-emerald-500/10 bg-emerald-50' : state.ats_score >= 50 ? 'dark:bg-amber-500/10 bg-amber-50' : 'dark:bg-red-500/10 bg-red-50';
-  const atsMsg  = state.ats_score >= 80 ? "🎉 Great job! Your resume is highly compatible with ATS systems."
+  const atsColor = state.ats_score >= 80 ? 'text-emerald-500' : state.ats_score >= 50 ? 'text-amber-500' : 'text-red-500';
+  const atsBg = state.ats_score >= 80 ? 'dark:bg-emerald-500/10 bg-emerald-50' : state.ats_score >= 50 ? 'dark:bg-amber-500/10 bg-amber-50' : 'dark:bg-red-500/10 bg-red-50';
+  const atsMsg = state.ats_score >= 80 ? "🎉 Great job! Your resume is highly compatible with ATS systems."
     : state.ats_score >= 50 ? "💪 Not bad! There's room to improve your ATS compatibility."
-    : "⚠️ Your resume may struggle with ATS. Consider optimizing it.";
+      : "⚠️ Your resume may struggle with ATS. Consider optimizing it.";
 
   return (
     <div className="min-h-screen dark:bg-[#080818] bg-slate-50 transition-colors duration-300 px-6 pt-28 pb-16">

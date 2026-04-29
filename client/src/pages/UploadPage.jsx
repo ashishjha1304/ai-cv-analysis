@@ -1,6 +1,5 @@
 import UploadCard from '../components/UploadCard';
-import { useNavigate } from 'react-router-dom';
-import { FaBolt, FaShieldAlt, FaBriefcase } from 'react-icons/fa';
+import { FaFilePdf, FaBolt, FaShieldAlt, FaBriefcase } from 'react-icons/fa';
 
 const highlights = [
   { icon: FaBolt,       label: 'ATS Score',      desc: 'Compatibility rating',      color: 'text-violet-500', bg: 'dark:bg-violet-500/10 bg-violet-50' },
@@ -33,21 +32,21 @@ function UploadPage() {
         {/* Heading */}
         <div className="text-center mb-10">
           <h1 className="text-4xl sm:text-5xl font-extrabold dark:text-white text-slate-900 mb-4 leading-tight">
-            Upload Your
+            Analyze your
             <span className="gradient-text"> Resume</span>
           </h1>
           <p className="dark:text-slate-400 text-slate-600 text-lg">
-            Get AI-powered ATS scoring, skill gap analysis, and job matches in seconds.
+            Get instant ATS scores, skills gap analysis, and tailored job recommendations using AI.
           </p>
         </div>
 
         {/* Upload Card */}
         <UploadCard />
 
-        {/* What we analyze */}
+        {/* Features */}
         <div className="mt-10">
           <p className="text-center text-sm font-medium dark:text-slate-500 text-slate-400 mb-5 uppercase tracking-widest">
-            What we'll analyze
+            Core Analysis Metrics
           </p>
           <div className="grid grid-cols-3 gap-4">
             {highlights.map(({ icon: Icon, label, desc, color, bg }) => (
@@ -61,11 +60,6 @@ function UploadPage() {
             ))}
           </div>
         </div>
-
-        {/* Privacy note */}
-        <p className="text-center text-xs dark:text-slate-600 text-slate-400 mt-8">
-          🔒 Your resume is analyzed and immediately deleted. We never store your data.
-        </p>
       </div>
     </div>
   );

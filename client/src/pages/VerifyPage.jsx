@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { FaGithub, FaShieldAlt, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
 
 const highlights = [
-  { icon: FaShieldAlt,         label: 'Trust Score',      desc: 'Overall credibility',       color: 'text-violet-500', bg: 'dark:bg-violet-500/10 bg-violet-50' },
-  { icon: FaGithub,            label: 'GitHub Activity',  desc: 'Contribution patterns',     color: 'text-blue-500',   bg: 'dark:bg-blue-500/10 bg-blue-50' },
-  { icon: FaExclamationTriangle, label: 'Red Flags',      desc: 'Potential concerns',        color: 'text-red-500',    bg: 'dark:bg-red-500/10 bg-red-50' },
+  { icon: FaShieldAlt, label: 'Trust Score', desc: 'Overall credibility', color: 'text-violet-500', bg: 'dark:bg-violet-500/10 bg-violet-50' },
+  { icon: FaGithub, label: 'GitHub Activity', desc: 'Contribution patterns', color: 'text-blue-500', bg: 'dark:bg-blue-500/10 bg-blue-50' },
+  { icon: FaExclamationTriangle, label: 'Red Flags', desc: 'Potential concerns', color: 'text-red-500', bg: 'dark:bg-red-500/10 bg-red-50' },
 ];
 
 function VerifyPage() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen dark:bg-[#080818] bg-slate-50 transition-colors duration-300 px-6 pt-28 pb-16">
 
