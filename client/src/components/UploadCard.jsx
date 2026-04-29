@@ -1,4 +1,4 @@
-import { FaFileAlt, FaUpload, FaCheckCircle } from "react-icons/fa";
+import { FaUpload, FaCheckCircle } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

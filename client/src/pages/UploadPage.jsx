@@ -1,6 +1,6 @@
 import UploadCard from '../components/UploadCard';
 import { useNavigate } from 'react-router-dom';
-import { FaFilePdf, FaBolt, FaShieldAlt, FaBriefcase } from 'react-icons/fa';
+import { FaBolt, FaShieldAlt, FaBriefcase } from 'react-icons/fa';
 
 const highlights = [
   { icon: FaBolt,       label: 'ATS Score',      desc: 'Compatibility rating',      color: 'text-violet-500', bg: 'dark:bg-violet-500/10 bg-violet-50' },
@@ -9,7 +9,6 @@ const highlights = [
 ];
 
 function UploadPage() {
-  const navigate = useNavigate();
   return (
     <div className="min-h-screen dark:bg-[#080818] bg-slate-50 transition-colors duration-300 px-6 pt-28 pb-16">
 

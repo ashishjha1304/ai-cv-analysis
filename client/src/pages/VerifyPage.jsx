@@ -9,7 +9,6 @@ const highlights = [
 ];
 
 function VerifyPage() {
-  const navigate = useNavigate();
   return (
     <div className="min-h-screen dark:bg-[#080818] bg-slate-50 transition-colors duration-300 px-6 pt-28 pb-16">
 
