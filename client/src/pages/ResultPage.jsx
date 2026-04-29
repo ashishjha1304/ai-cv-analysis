@@ -1,11 +1,34 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaBriefcase, FaChartLine, FaCheckCircle, FaExclamationTriangle, FaRedo } from 'react-icons/fa';
 
+import { useState, useEffect } from 'react';
+
 function ScoreRing({ score }) {
+  const [displayScore, setDisplayScore] = useState(0);
   const color = score >= 80 ? '#22c55e' : score >= 50 ? '#f59e0b' : '#ef4444';
   const label = score >= 80 ? 'Excellent' : score >= 50 ? 'Good' : 'Needs Work';
   const circumference = 2 * Math.PI * 54;
-  const offset = circumference - (score / 100) * circumference;
+  
+  useEffect(() => {
+    let start = 0;
+    const duration = 1200; // 1.2s
+    const increment = score / (duration / 16); // 60fps
+    
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= score) {
+        setDisplayScore(score);
+        clearInterval(timer);
+      } else {
+        setDisplayScore(Math.floor(start));
+      }
+    }, 16);
+    
+    return () => clearInterval(timer);
+  }, [score]);
+
+  // Use displayScore for offset so the ring animates alongside the number
+  const offset = circumference - (displayScore / 100) * circumference;
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -17,8 +40,8 @@ function ScoreRing({ score }) {
           strokeDashoffset={offset}
           strokeLinecap="round"
           transform="rotate(-90 70 70)"
-          style={{ transition: 'stroke-dashoffset 1.2s ease' }} />
-        <text x="70" y="64" textAnchor="middle" fontSize="28" fontWeight="800" fill={color}>{score}</text>
+          style={{ transition: 'stroke-dashoffset 0.1s linear' }} />
+        <text x="70" y="64" textAnchor="middle" fontSize="28" fontWeight="800" fill={color}>{displayScore}</text>
         <text x="70" y="80" textAnchor="middle" fontSize="11" fill="#94a3b8">out of 100</text>
       </svg>
       <span className="text-sm font-semibold mt-1" style={{ color }}>{label}</span>
@@ -115,7 +138,8 @@ function ResultPage() {
               {state.skills_detected?.map((skill, i) => (
                 <span key={i} className="px-3 py-1.5 rounded-full text-sm font-medium
                   dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/20
-                  bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  bg-emerald-100 text-emerald-800 border border-emerald-200
+                  hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/10 transition-all cursor-default">
                   {skill}
                 </span>
               ))}
@@ -137,7 +161,8 @@ function ResultPage() {
               {state.recommended_skills?.map((skill, i) => (
                 <span key={i} className="px-3 py-1.5 rounded-full text-sm font-medium
                   dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/20
-                  bg-amber-100 text-amber-800 border border-amber-200">
+                  bg-amber-100 text-amber-800 border border-amber-200
+                  hover:scale-105 hover:shadow-lg hover:shadow-amber-500/10 transition-all cursor-default">
                   {skill}
                 </span>
               ))}

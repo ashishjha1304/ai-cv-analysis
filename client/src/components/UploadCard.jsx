@@ -136,9 +136,31 @@ function UploadCard() {
       )}
 
       {loading && (
-        <div className="w-full mt-6 p-4 rounded-2xl glass flex items-center justify-center gap-3">
-          <div className="w-5 h-5 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
-          <span className="font-semibold dark:text-white text-slate-900">Processing with AI...</span>
+        <div className="w-full mt-6 p-6 rounded-2xl glass relative overflow-hidden">
+          {/* Animated laser line */}
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-violet-500 to-transparent opacity-50 animate-[scan_2s_ease-in-out_infinite]" />
+          
+          <div className="flex flex-col items-center justify-center gap-3 relative z-10">
+            <div className="relative flex items-center justify-center">
+              {/* Pulsing rings */}
+              <div className="absolute inset-0 rounded-full border border-violet-500/30 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
+              <div className="absolute inset-0 rounded-full border border-blue-500/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" />
+              
+              <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-violet-500/30 z-10">
+                <FaUpload className="w-5 h-5 text-white animate-pulse" />
+              </div>
+            </div>
+            
+            <div className="text-center mt-2">
+              <h4 className="font-bold dark:text-white text-slate-900 text-lg">AI Engine Active</h4>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+                <span className="text-sm font-medium dark:text-violet-400 text-violet-600 animate-pulse">
+                  Extracting Resume Data & Computing ATS Score...
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
