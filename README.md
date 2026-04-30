@@ -8,7 +8,7 @@ Developed with ❤️ by **[Ashish Jha](https://github.com/ashishjha1304)** · �
 
 ## 🚀 Live Demo
 
-🔗 [Frontend on Vercel](https://ai-cv-analysis.vercel.app) — *(update with your live URL)*
+🔗 [Frontend on Vercel](https://ai-cv-analysis-platform.vercel.app/)
 
 ---
 
