@@ -1,6 +1,6 @@
 # ⚡ AI Career Intelligence Platform
 
-A premium, state-of-the-art AI-powered platform designed to revolutionize the recruitment and job-seeking experience. Built with a stunning **Glassmorphism UI**, **Dark/Light Mode** support, and powered by **Google Gemini AI**.
+A premium, state-of-the-art AI-powered platform designed to revolutionize the recruitment and job-seeking experience. Built with a stunning **Glassmorphism UI**, **Dark/Light Mode** support, and powered by **Groq Llama 3 AI**.
 
 Developed with ❤️ by **[Ashish Jha](https://github.com/ashishjha1304)** · © 2026
 
@@ -43,8 +43,8 @@ Developed with ❤️ by **[Ashish Jha](https://github.com/ashishjha1304)** · �
 |-------|-----------|
 | Frontend | React.js, Tailwind CSS v3, React Icons |
 | Backend | Node.js, Express.js |
-| Database | MongoDB Atlas |
-| AI Engine | Google Gemini 1.5 Flash |
+| Database | Supabase (PostgreSQL) |
+| AI Engine | Groq API (Llama 3.3 70B) |
 | Hosting (Frontend) | Vercel |
 | Hosting (Backend) | Render |
 
@@ -54,8 +54,8 @@ Developed with ❤️ by **[Ashish Jha](https://github.com/ashishjha1304)** · �
 
 ### Prerequisites
 - Node.js v18+
-- A Google Gemini API Key — [Get it free](https://aistudio.google.com/app/apikey)
-- MongoDB Atlas connection string
+- A Groq API Key — [Get it free](https://console.groq.com/keys)
+- Supabase Project URL and Anon Key
 
 ### 1. Clone the repository
 ```bash
@@ -71,9 +71,10 @@ npm install
 
 Create a `.env` file in the `server/` folder:
 ```env
-MONGO_URI=your_mongodb_atlas_uri
 PORT=5000
-GEMINI_API_KEY=your_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 Start the backend:
@@ -106,7 +107,7 @@ The app will be running at `http://localhost:3000`.
 | Service | Platform | Notes |
 |---------|----------|-------|
 | Frontend | [Vercel](https://vercel.com) | Set `REACT_APP_API_URL` env var to your Render backend URL |
-| Backend | [Render](https://render.com) | Set `MONGO_URI`, `GEMINI_API_KEY`, `PORT=5000` env vars |
+| Backend | [Render](https://render.com) | Set `GROQ_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `PORT=5000` env vars |
 
 ---
 
